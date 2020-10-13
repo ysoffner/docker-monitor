@@ -5,5 +5,5 @@ workflows:
   my_workflow:
     jobs:
       - shellcheck/check:
-          dir: ./docker-monitor
+          dir: ./
           exclude: SC2148
