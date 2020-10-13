@@ -16,7 +16,7 @@ services:
         max-file: "5"
     volumes:
       - ./prometheus_data:/prometheus/data:z
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      # - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
   influxdb:
     image: influxdb:latest
