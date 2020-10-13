@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    user: root
+    ports:
+      - 9090:9090
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    volumes:
+      - ./prometheus_data:/prometheus/data:z
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8083:8083"
+      - "8086:8086"
+      - "8090:8090"
+    env_file:
+      - 'env.influxdb'
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    volumes:
+      # Data persistency
+      # sudo mkdir -p /srv/docker/influxdb/data
+      - ./influxdb_data:/var/lib/influxdb
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    links:
+      - influxdb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "80:3000"
+    env_file:
+      - 'env.grafana'
+    user: "0"
+    links:
+      - influxdb
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "5"
+    volumes:
+      # Data persistency
+      # sudo mkdir -p /srv/docker/grafana/data; chown 472:472 /srv/docker/grafana/data
+      #    - /srv/docker/grafana/data:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana  
+
