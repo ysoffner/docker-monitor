@@ -1,9 +1,9 @@
 version: 2.1
 jobs:
   build:
-    working_directory: /docker-grafana
+    working_directory: /docker-monitor
     docker:
-      - image: docker:19.03.13-ce-git
+      - image: docker:19.03.13-git
     steps:
       - checkout
       - setup_remote_docker
