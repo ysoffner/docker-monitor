@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    #    logging:
+    #  driver: loki
+    #  options:
+    #    loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/local-config.yaml
+
+  promtail:
+    image: grafana/promtail:1.5.0
+    container_name: promtail
+    # logging:
+    # driver: loki
+    #  options:
+    #    loki-url: 'http://loki:loki@localhost:3100/loki/api/v1/push'
+    volumes:
+      - /var/log:/var/log
+      - ./promtail-config.yaml:/etc/promtail/config.yaml
+    command: -config.file=/etc/promtail/config.yaml
+
