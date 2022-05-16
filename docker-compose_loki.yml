@@ -17,7 +17,7 @@ services:
       - "3100:3100"
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - ./loki_data:/loki/
+      - ./loki_data:/data/
     command: -config.file=/etc/loki/local-config.yaml
 
   promtail:
